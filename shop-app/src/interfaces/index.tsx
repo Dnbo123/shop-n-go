@@ -9,3 +9,10 @@ export interface CartItem {
     items: CartItem[];
     total: number;
   }
+
+  export interface AuthContextType {
+    user: any;
+    login: (credentials: any) => Promise<void>;
+    logout: () => void;
+    isAuthenticated: boolean;
+  }
