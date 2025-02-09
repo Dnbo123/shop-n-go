@@ -37,4 +37,12 @@ export interface CartItem {
     hasError: boolean;
     error: Error | null;
   }
+
+  export interface Testimonial {
+    id: number;
+    name: string;
+    rating: number;
+    comment: string;
+  }
+  
   
