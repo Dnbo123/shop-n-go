@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'; // Import Link from react-router-dom fo
 import { useAuth } from '../context/AuthContext'; // Import useAuth hook for authentication context
 import { useCart } from '../context/CartContext'; // Import useCart hook for cart context
 
-const Navbar = () => {
+export const Navbar = () => {
   // Destructure user and logout from useAuth hook
   const { user, logout } = useAuth(); 
   // Destructure state as cart from useCart hook

@@ -45,4 +45,14 @@ export interface CartItem {
     comment: string;
   }
   
+  export interface ProductFormProps {
+    initialData?: any;
+    onSubmit: (data: any) => void;
+  }
+
+  export interface ProtectedRouteProps {
+    children: React.ReactNode;
+    requireAdmin?: boolean;
+  }
+
   
