@@ -41,7 +41,7 @@ const cartReducer = (state: CartState, action: any) => {
          * If the item does not exist in the cart, no action is taken
          */
         case 'REMOVE_ITEM':
-            const item = state.items.find(item => item.id !== action.payload),
+            const item = state.items.find(item => item.id !== action.payload);
               return {
                 ...state,
                 items: state.items.filter(item => item.id !== action.payload),

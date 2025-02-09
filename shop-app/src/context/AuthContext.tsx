@@ -8,7 +8,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 // Create a provider component for the authentication context
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Set up state for the user
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{ id: number; name: string; role: string } | null>(null);
 
   // Get the navigate function from React Router
   const navigate = useNavigate();
