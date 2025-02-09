@@ -1,33 +1,82 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import ProductCard from '../components/ProductCard';
-import { fetchProducts } from '../services/api';
+import React, { useState } from 'react';
+import { useProducts } from '../hooks/useProducts';
+import ProductCard from 'components/ProductCard';
+import { Product } from '../types';
 
-// This component fetches products data from API and renders a list of products
-const Products = () => {
-    // useQuery hook fetches products data and caches it
-    // it returns data, isLoading and error
-    const {data: products, isLoading, error } = useQuery(['products'], fetchProducts);
+/**
+ * The Products page component.
+ * 
+ * This component displays a list of products. It allows the user to search for products
+ * by name, and to filter the products by category.
+ */
+export const Products: React.FC = () => {
+  // Get the products from the useProducts hook.
+  // The hook returns an object with two properties: products and isLoading.
+  // The products property is an array of products, and the isLoading property is a boolean
+  // that indicates whether the products are still being loaded.
+  const { products, isLoading } = useProducts();
 
-    // if data is still loading, show a loading message
-    if (isLoading) return <div>Loading...</div>;
-    // if there was an error, show an error message
-    if (error) return <div>Error loading products</div>;
+  // Set up state variables for the search term and the category.
+  // The search term is the text that the user enters in the search input field.
+  // The category is the selected category from the category dropdown.
+  const [searchTerm, setSearchTerm] = useState('');
+  const [category, setCategory] = useState('all');
 
-    // if data is loaded, render a list of products
-    return (
-        <div className="container mx-auto p-4">
-          {/* header with title */}
-          <h1 className="text-2xl font-bold mb-6">Our Products</h1>
-          {/* grid with product cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* map over products and render a ProductCard for each one */}
-            {products?.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      );
-};
+  // Filter the products based on the search term and category.
+  // The filteredProducts variable is an array of products that match the search term
+  // and category.
+  const filteredProducts = products?.filter(product => {
+    // Check if the product name matches the search term.
+    // The search term is converted to lowercase and the product name is converted to
+    // lowercase so that the comparison is case-insensitive.
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Check if the product category matches the selected category.
+    // If the category is 'all', then the product is included in the filtered list.
+    const matchesCategory = category === 'all' || product.category === category;
+    
+    // Return true if the product matches both the search term and category.
+    return matchesSearch && matchesCategory;
+  });
+
+  // If the products are still being loaded, display a loading message.
+  if (isLoading) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
+  
+  // Otherwise, render the products list.
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+        {/* The search input field. */}
+        <input
+          type="text"
+          placeholder="Search products..."
+          className="px-4 py-2 border rounded-lg mb-4 md:mb-0 md:w-64"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        {/* The category dropdown. */}
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="px-4 py-2 border rounded-lg"
+        >
+          {/* The 'All Categories' option. */}
+          <option value="all">All Categories</option>
+          {/* Add your categories here */}
+        </select>
+      </div>
+      
+      {/* The products list. */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {filteredProducts?.map(product => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default Products;
+

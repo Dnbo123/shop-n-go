@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 
-export const useProduct = (id: string) => {
+export const useProducts = (id: string) => {
     return useQuery(['product', id], () => fetchProduct(id));
 }
