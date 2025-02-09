@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface CartItem {
     id: string;
     name: string;
@@ -25,5 +27,14 @@ export interface CartItem {
       description: string;
       image: string;
     };
+  }
+
+  export interface Props {
+    children: ReactNode;
+  }
+  
+  export interface State {
+    hasError: boolean;
+    error: Error | null;
   }
   
