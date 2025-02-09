@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer } from 'react';
 import { CartItem } from 'interfaces';
 import { CartState } from 'interfaces';
 
@@ -43,10 +43,7 @@ type CartAction =
           total: state.total - (item ? item.price * item.quantity : 0)
         };
       }
-      case 'UPDATE_QUANTITY': {
-        const item = state.items.find(item => item.id === action.payload.id);
-        if (!item) return state;
-        const quantityDiff = action.payload.quantity - item.quantity;
+      case 'UPDATE_QUANTITY':
         return {
           ...state,
           items: state.items.map(item =>
@@ -54,9 +51,12 @@ type CartAction =
               ? { ...item, quantity: action.payload.quantity }
               : item
           ),
-          total: state.total + item.price * quantityDiff
+          total: state.items.reduce((sum, item) => 
+            item.id === action.payload.id
+              ? sum + item.price * action.payload.quantity
+              : sum + item.price * item.quantity
+          , 0)
         };
-      }
       default:
         return state;
     }
@@ -65,7 +65,10 @@ type CartAction =
   const CartContext = createContext<{
     state: CartState;
     dispatch: React.Dispatch<CartAction>;
-  } | null>(null);
+  }>({
+    state: { items: [], total: 0 },
+    dispatch: () => null
+  });
 
 /**
  * Provider component for the cart context
@@ -77,18 +80,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       total: 0
     });
   
-    useEffect(() => {
-      const savedCart = localStorage.getItem('cart');
-      if (savedCart) {
-        const { items, total } = JSON.parse(savedCart);
-        dispatch({ type: 'LOAD_CART', payload: { items, total } });
-      }
-    }, []);
-  
-    useEffect(() => {
-      localStorage.setItem('cart', JSON.stringify(state));
-    }, [state]);
-  
     return (
       <CartContext.Provider value={{ state, dispatch }}>
         {children}
@@ -98,13 +89,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   /**
    * Hook for accessing the cart state and dispatch function
    */
-  export const useCart = () => {
-    const context = useContext(CartContext);
-    if (!context) {
-        throw new Error('useCart must be used within a CartProvider');
-    }
-    return context;
-  }
+  export const useCart = () => useContext(CartContext);
 
   export default CartContext;
 

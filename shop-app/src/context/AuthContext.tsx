@@ -1,38 +1,30 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContextType } from 'interfaces';
+import { User } from '../types';
 
 // Create a context for authentication state and functions
 const AuthContext = createContext<AuthContextType | null>(null);
 
+
+
 // Create a provider component for the authentication context
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Set up state for the user
-  const [user, setUser] = useState<{ id: number; name: string; role: string } | null>(null);
-
-  // Get the navigate function from React Router
-  const navigate = useNavigate();
+const [user, setUser] = useState<User | null>(null);
 
   // Define the login function
-  const login = async (credentials: any) => {
-    // This is where an API call to log in would go
-    // For now, just set the user state to a dummy object
-    setUser({ id: 1, name: 'User', role: 'admin' });
-    // Navigate to the home page
-    navigate('/');
+  const login = async (email:string, password: string) => {
+    //implement login logic
+    setUser({ id: '1',email, role: 'admin' });
   };
 
   // Define the logout function
-  const logout = () => {
-    // Clear the user state
-    setUser(null);
-    // Navigate to the login page
-    navigate('/login');
-  };
+  const logout = () => setUser(null);
 
   // Return the context provider, passing the user state and functions
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { User } from '../types';
 
 export interface CartItem {
     id: string;
@@ -13,12 +14,10 @@ export interface CartItem {
   }
 
   export interface AuthContextType {
-    user: any;
-    login: (credentials: any) => Promise<void>;
+    user: User | null;
+    login: (email: string, password: string) => promise<void>;
     logout: () => void;
-    isAuthenticated: boolean;
-  }
-
+}
   export interface ProductCardProps {
     product: {
       id: string;
