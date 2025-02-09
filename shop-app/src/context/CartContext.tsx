@@ -77,3 +77,5 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return context;
   }
 
+  export default CartContext;
+
