@@ -16,3 +16,14 @@ export interface CartItem {
     logout: () => void;
     isAuthenticated: boolean;
   }
+
+  export interface ProductCardProps {
+    product: {
+      id: string;
+      name: string;
+      price: number;
+      description: string;
+      image: string;
+    };
+  }
+  
