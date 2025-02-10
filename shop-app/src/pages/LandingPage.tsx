@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchProducts } from '../services/api';
-import { ProductCard } from 'components/ProductCard';
+import ProductCard from 'components/ProductCard';
 
 // The LandingPage component renders a section with a heading and a grid of products.
 // The products are fetched using the fetchProducts function from the api service

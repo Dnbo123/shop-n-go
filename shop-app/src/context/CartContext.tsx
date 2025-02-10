@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import { CartItem, Product } from '../types';
 import { CartContextType } from 'interfaces';
+import { CartState } from 'interfaces';
 
 type CartAction = 
   | { type: 'ADD_ITEM'; payload: CartItem }
@@ -21,46 +22,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     dispatch({ type: 'REMOVE_ITEM', payload: productId });
   };
 
-  const cartReducer = (state: CartState, action: CartAction): CartState => {
-    switch (action.type) {
-      case 'ADD_ITEM':
-        const existingItem = state.items.find(item => item.id === action.payload.id);
-        if (existingItem) {
-          return {
-            ...state,
-            items: state.items.map(item =>
-              item.id === action.payload.id
-                ? { ...item, quantity: item.quantity + 1 }
-                : item
-            ),
-            total: state.total + action.payload.price
-          };
-        }
-        return {
-          ...state,
-          items: [...state.items, action.payload],
-          total: state.total + action.payload.price
-        };
-      case 'REMOVE_ITEM':
-        const item = state.items.find(item => item.id === action.payload);
-        return {
-          ...state,
-          items: state.items.filter(item => item.id !== action.payload),
-          total: state.total - (item ? item.price * item.quantity : 0)
-        };
-      case 'UPDATE_QUANTITY':
-        return {
-          ...state,
-          items: state.items.map(item =>
-            item.id === action.payload.id
-              ? { ...item, quantity: action.payload.quantity }
-              : item
-          )
-        };
-      default:
-        return state;
-    }
-  };
+
 
   const updateQuantity = (productId: string, quantity: number) => {
     dispatch({ type: 'UPDATE_QUANTITY', payload: { id: productId, quantity } });
@@ -71,6 +33,47 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {children}
     </CartContext.Provider>
   );
+};
+
+const cartReducer = (state: CartState, action: CartAction): CartState => {
+  switch (action.type) {
+    case 'ADD_ITEM':
+      const existingItem = state.items.find(item => item.id === action.payload.id);
+      if (existingItem) {
+        return {
+          ...state,
+          items: state.items.map(item =>
+            item.id === action.payload.id
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          ),
+          total: state.total + action.payload.price
+        };
+      }
+      return {
+        ...state,
+        items: [...state.items, action.payload],
+        total: state.total + action.payload.price
+      };
+    case 'REMOVE_ITEM':
+      const item = state.items.find(item => item.id === action.payload);
+      return {
+        ...state,
+        items: state.items.filter(item => item.id !== action.payload),
+        total: state.total - (item ? item.price * item.quantity : 0)
+      };
+    case 'UPDATE_QUANTITY':
+      return {
+        ...state,
+        items: state.items.map(item =>
+          item.id === action.payload.id
+            ? { ...item, quantity: action.payload.quantity }
+            : item
+        )
+      };
+    default:
+      return state;
+  }
 };
 
 export const useCart = () => {

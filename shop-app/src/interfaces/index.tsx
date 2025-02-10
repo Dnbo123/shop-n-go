@@ -21,13 +21,7 @@ export interface CartItem {
     logout: () => void;
 }
   export interface ProductCardProps {
-    product: {
-      id: string;
-      name: string;
-      price: number;
-      description: string;
-      image: string;
-    };
+   product: Product;
   }
 
   export interface Props {
@@ -69,6 +63,7 @@ export interface CartItem {
     removeFromCart: (productId: string) => void;
     updateQuantity: (productId: string, quantity: number) => void;
   }
+  
   
 
   

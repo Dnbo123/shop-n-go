@@ -1,16 +1,26 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import App from './App';
-import './index.css';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import AppRoutes from './routes';
 
 const queryClient = new QueryClient();
-const root = createRoot(document.getElementById('root')!);
 
-root.render(
-  <React.StrictMode>
+const App: React.FC = () => {
+  return (
     <QueryClientProvider client={queryClient}>
-      <App />
+      <BrowserRouter>
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-grow">
+            <AppRoutes />
+          </main>
+          <Footer />
+        </div>
+      </BrowserRouter>
     </QueryClientProvider>
-  </React.StrictMode>
-);
+  );
+};
+
+export default App;
