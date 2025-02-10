@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { fetchSingleProduct } from '../services/api';
+import { fetchProduct } from 'utils/api';
 import { useCart } from '../context/CartContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -14,7 +14,7 @@ const ProductDetails: React.FC = () => {
 
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', id],
-    queryFn: () => fetchSingleProduct(id!),
+    queryFn: () => fetchProduct(id!),
     enabled: !!id,
     retry: 1
   });
