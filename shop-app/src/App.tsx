@@ -2,10 +2,10 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import LandingPage from './pages/LandingPage';
-import AdminDashboard from './pages/AdminDashboard';
-import Login from './pages/Login';
-import { ProductProvider } from './context/ProductContext';
+import LandingPage from 'pages/LandingPage';
+import AdminDashboard from 'pages/AdminDashboard';
+import Login from 'pages/Login';
+import { ProductProvider } from 'context/ProductContext';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 

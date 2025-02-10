@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { Product, User, CartItem } from '../types';
+import { Product, User, CartItem, Cart } from '../types';
 
-const api = axios.create({
+export const api = axios.create({
  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3001'
 });
 
@@ -13,6 +13,14 @@ export const fetchProducts = async (): Promise<Product[]> => {
 export const fetchProduct = async (id: string): Promise<Product> => {
  const { data } = await api.get(`/products/${id}`);
  return data;
+};
+
+/**
+ * Fetch a list of all orders from the API.
+ */
+export const fetchOrders = async (): Promise<Cart[]> => {
+    const { data } = await api.get('/orders');
+    return data;
 };
 
 export const createProduct = async (product: Omit<Product, 'id'>): Promise<Product> => {

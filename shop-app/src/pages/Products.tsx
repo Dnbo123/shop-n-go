@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import ProductCard from 'components/ProductCard';
-import { Product } from '../types';
+import { Product } from 'types';
 
 /**
  * The Products page component.
@@ -14,7 +14,7 @@ export const Products: React.FC = () => {
   // The hook returns an object with two properties: products and isLoading.
   // The products property is an array of products, and the isLoading property is a boolean
   // that indicates whether the products are still being loaded.
-  const { products, isLoading } = useProducts();
+  const { data:products, isLoading } = useProducts('');
 
   // Set up state variables for the search term and the category.
   // The search term is the text that the user enters in the search input field.
@@ -25,19 +25,11 @@ export const Products: React.FC = () => {
   // Filter the products based on the search term and category.
   // The filteredProducts variable is an array of products that match the search term
   // and category.
-  const filteredProducts = products?.filter(product => {
-    // Check if the product name matches the search term.
-    // The search term is converted to lowercase and the product name is converted to
-    // lowercase so that the comparison is case-insensitive.
+  const filteredProducts = products ? products.filter((product: Product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    // Check if the product category matches the selected category.
-    // If the category is 'all', then the product is included in the filtered list.
     const matchesCategory = category === 'all' || product.category === category;
-    
-    // Return true if the product matches both the search term and category.
     return matchesSearch && matchesCategory;
-  });
+  }) : [];
 
   // If the products are still being loaded, display a loading message.
   if (isLoading) {
@@ -70,9 +62,9 @@ export const Products: React.FC = () => {
       
       {/* The products list. */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {filteredProducts?.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+      {filteredProducts?.map((product: Product) => (
+  <ProductCard key={product.id} product={product} />
+))} 
       </div>
     </div>
   );

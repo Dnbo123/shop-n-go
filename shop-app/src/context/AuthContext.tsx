@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { AuthContextType } from 'interfaces';
 import { User } from '../types';
 
@@ -24,7 +23,11 @@ const [user, setUser] = useState<User | null>(null);
 
   // Return the context provider, passing the user state and functions
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ 
+        user,
+        isAuthenticated: user !== null, 
+        login, 
+        logout }}>
       {children}
     </AuthContext.Provider>
   );

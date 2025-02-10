@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { User } from '../types';
+import { Product } from '../types';
 
 export interface CartItem {
     id: string;
@@ -14,8 +15,9 @@ export interface CartItem {
   }
 
   export interface AuthContextType {
-    user: User | null;
-    login: (email: string, password: string) => promise<void>;
+    user: User | null; 
+    isAuthenticated: boolean;
+    login: (email: string, password: string) => Promise<void>;
     logout: () => void;
 }
   export interface ProductCardProps {
@@ -46,7 +48,8 @@ export interface CartItem {
   
   export interface ProductFormProps {
     initialData?: any;
-    onSubmit: (data: any) => void;
+    onSubmit: (data: any) => Promise<void>;
+    onSuccess?: () => void;
   }
 
   export interface ProtectedRouteProps {
@@ -54,4 +57,19 @@ export interface CartItem {
     requireAdmin?: boolean;
   }
 
+  export interface ProductState {
+    products: Product[];
+    loading: boolean;
+    error: string | null;
+  }
+
+  export interface CartContextType {
+    state: CartState;
+    addToCart: (product: Product) => void;
+    removeFromCart: (productId: string) => void;
+    updateQuantity: (productId: string, quantity: number) => void;
+  }
+  
+
+  
   

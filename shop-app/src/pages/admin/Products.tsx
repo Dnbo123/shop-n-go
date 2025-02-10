@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchProducts, createProduct, updateProduct, deleteProduct } from '../../services/api';
-import { ProductForm } from '../../components/ProductForm';
+import ProductForm from 'components/ProductForm';
 import { Product } from '../../types';
 
 // The Products page component.
@@ -46,7 +46,14 @@ export const Products = () => {
         // The onSubmit function is called when the form is submitted.
         // If the form is being used to edit a product, the updateMutation is called.
         // If the form is being used to create a new product, the createMutation is called.
-        onSubmit={editingProduct ? updateMutation.mutate : createMutation.mutate}
+        onSubmit={editingProduct ? 
+          async (data: any) => {
+            await updateMutation.mutate(data);
+          } : 
+          async (data: any) => {
+            await createMutation.mutate(data);
+          }
+        }
         // The initial data for the form is the product that is being edited.
         initialData={editingProduct}
         // When the form is submitted successfully, the editingProduct state is set to null.

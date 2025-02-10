@@ -16,3 +16,10 @@ export interface Product {
     email: string;
     role: 'user' | 'admin';
   }
+
+  export interface Cart {
+    id: string;
+    userId: string;
+    items: CartItem[];
+    total: number;
+  }
