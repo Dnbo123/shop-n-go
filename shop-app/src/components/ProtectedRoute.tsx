@@ -4,31 +4,28 @@ import { useAuth } from '../context/AuthContext';
 import { ProtectedRouteProps } from 'interfaces';
 
 /**
- * A protected route component that only renders the children if the user is authenticated.
- * If the user is not authenticated, it redirects to the login page.
- * If the user is authenticated but does not have the required role, it redirects to the home page.
- * @param children The children components to render if the user is authenticated.
- * @param requireAdmin Whether the user must have the admin role to access the route.
+ * ProtectedRoute component ensures that routes are only accessible to authenticated users.
+ * It can also restrict access to users with specific roles (e.g., admin).
+ * 
+ * @param children - The components to render if access is granted.
+ * @param requireAdmin - A flag to indicate if admin role is required for access.
  */
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-    children, 
-    requireAdmin = false 
-  }) => {
-    const { user, isAuthenticated } = useAuth();
-  
-    // If the user is not authenticated, redirect to the login page
-    if (!isAuthenticated) {
-      return <Navigate to="/login" replace />;
-    }
-  
-    // If the user is authenticated but does not have the required role, redirect to the home page
-    if (requireAdmin && user?.role !== 'admin') {
-      return <Navigate to="/" replace />;
-    }
-  
-    // If the user is authenticated and has the required role, render the children
-    return <>{children}</>;
-  };
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAdmin = false }) => {
+  const { user } = useAuth(); // Retrieve the current user from authentication context
 
-  export default ProtectedRoute;
+  // Redirect unauthenticated users to the login page
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Redirect users without admin role to the home page if admin access is required
+  if (requireAdmin && user.role !== 'admin') {
+    return <Navigate to="/" replace />;
+  }
+
+  // Render child components if user is authenticated and, if required, has admin role
+  return <>{children}</>;
+};
+
+export default ProtectedRoute;
 

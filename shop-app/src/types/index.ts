@@ -5,16 +5,17 @@ export interface Product {
   description: string;
   image: string;
   category: string;
-  featured: boolean;
   stock: number;
   rating: number;
   reviews: number;
+  featured: boolean;
 }
   
   export interface CartItem extends Product {
     quantity: number;
   }
-  
+  // tech-band-originals/shop-app/src/interfaces/index.tsx
+
   export interface User {
     id: string;
     email: string;

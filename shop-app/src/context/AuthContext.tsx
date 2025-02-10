@@ -15,7 +15,7 @@ const [user, setUser] = useState<User | null>(null);
   // Define the login function
   const login = async (email:string, password: string) => {
     //implement login logic
-    setUser({ id: '1',email, role: 'admin' });
+    setUser({ id: '1',email, role: 'user' });
   };
 
   // Define the logout function
@@ -44,5 +44,3 @@ export const useAuth = () => {
   // Return the context
   return context;
 };
-
-export default AuthProvider;

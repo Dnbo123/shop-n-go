@@ -1,26 +1,28 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import AppRoutes from './routes';
+import App from './App';
+import './index.css';
 
+// Create a QueryClient instance to manage caching
 const queryClient = new QueryClient();
 
-const App: React.FC = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-grow">
-            <AppRoutes />
-          </main>
-          <Footer />
-        </div>
-      </BrowserRouter>
-    </QueryClientProvider>
-  );
-};
+// Get the root element from the DOM
+const rootElement = document.getElementById('root');
 
-export default App;
+// If the root element exists, render the app
+if (rootElement) {
+  // Create a root element for the app
+  const root = ReactDOM.createRoot(rootElement);
+  // Render the app
+  root.render(
+    // Use React.StrictMode to enable strict mode
+    <React.StrictMode>
+      // Use QueryClientProvider to provide the QueryClient instance to the app
+      <QueryClientProvider client={queryClient}>
+        // Render the App component
+        <App />
+      </QueryClientProvider>
+    </React.StrictMode>
+  );
+}

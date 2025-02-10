@@ -12,7 +12,9 @@ class ErrorBoundary extends Component<Props, State> {
      * `hasError` is set to false, and `error` is set to null.
      */
     public state: State = {
+      // Whether the error boundary has caught an error.
       hasError: false,
+      // The error that was caught.
       error: null
     };
   
@@ -22,6 +24,8 @@ class ErrorBoundary extends Component<Props, State> {
      * @returns The updated state of the error boundary.
      */
     public static getDerivedStateFromError(error: Error): State {
+      // If an error is caught, update the state of the error boundary to indicate that an error has occurred,
+      // and store the error in the state.
       return { hasError: true, error };
     }
   
@@ -31,7 +35,10 @@ class ErrorBoundary extends Component<Props, State> {
      * @param errorInfo Information about the error.
      */
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-      console.error('Uncaught error:', error, errorInfo);
+      // Log the error to the console.
+      console.error('Error', error);
+      // Log information about the error to the console.
+      console.error('Error Info', errorInfo);
     }
   
     /**
@@ -41,16 +48,19 @@ class ErrorBoundary extends Component<Props, State> {
       // If the error boundary has caught an error, render the fallback UI.
       if (this.state.hasError) {
         return (
+          // Render a full-screen error message with a button to try again.
           <div className="min-h-screen flex items-center justify-center bg-gray-50">
             <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-lg">
               <h2 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h2>
               <p className="text-gray-600 mb-4">
+                {/* Display the error message if it is available. */}
                 {this.state.error?.message || 'An unexpected error occurred'}
               </p>
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 onClick={() => this.setState({ hasError: false, error: null })}
               >
+                {/* Render a button to try again. */}
                 Try again
               </button>
             </div>
@@ -64,3 +74,4 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   export default ErrorBoundary;
+

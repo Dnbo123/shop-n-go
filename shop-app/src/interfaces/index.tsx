@@ -1,14 +1,9 @@
 import { ReactNode } from 'react';
 import { User } from '../types';
 import { Product } from '../types';
+import { CartItem } from '../types';
 
-export interface CartItem {
-    id: string;
-    name: string;
-    price: number;
-    quantity: number;
-  }
-  
+
  export interface CartState {
     items: CartItem[];
     total: number;
@@ -41,9 +36,9 @@ export interface CartItem {
   }
   
   export interface ProductFormProps {
-    initialData?: any;
-    onSubmit: (data: any) => Promise<void>;
-    onSuccess?: () => void;
+    initialData?: Product | null;
+    onSubmit: (data: Product | Omit<Product, 'id'>) => Promise<void>;
+    onCancel?:() => void;
   }
 
   export interface ProtectedRouteProps {
@@ -60,9 +55,10 @@ export interface CartItem {
   export interface CartContextType {
     state: CartState;
     addToCart: (product: Product) => void;
-    removeFromCart: (productId: string) => void;
-    updateQuantity: (productId: string, quantity: number) => void;
-  }
+    removeFromCart: (id: string) => void;
+    updateQuantity: (id: string, quantity: number) => void;
+    clearCart: () => void;
+   }
   
   
 

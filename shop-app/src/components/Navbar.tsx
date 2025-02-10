@@ -1,45 +1,35 @@
-import React from 'react'; // Import React to create a functional component
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom for navigation
-import { useAuth } from '../context/AuthContext'; // Import useAuth hook for authentication context
-import { useCart } from '../context/CartContext'; // Import useCart hook for cart context
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
-export const Navbar = () => {
-  // Destructure user and logout from useAuth hook
-  const { user, logout } = useAuth(); 
-  // Destructure state as cart from useCart hook
-  const { state: cart } = useCart();
+// Navbar component displays a navigation bar at the top of the page
+const Navbar: React.FC = () => {
+  // Extract the cart state from custom hook
+  const { state } = useCart();
 
   return (
-    // Navigation bar with gray background and padding
-    <nav className="bg-gray-800 p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        {/* Link to home page with shop title */}
-        <Link to="/" className="text-white text-xl font-bold">Shop</Link>
-        <div className="flex items-center space-x-6">
-          {/* Link to products page */}
-          <Link to="/products" className="text-white">Products</Link>
-          {/* Link to cart page with cart item count */}
-          <Link to="/cart" className="text-white">
-            Cart ({cart.items.length})
-          </Link>
-          {/* Conditional rendering based on user authentication status */}
-          {user ? (
-            <>
-              {/* Show admin link if user role is admin */}
-              {user.role === 'admin' && (
-                <Link to="/admin" className="text-white">Admin</Link>
-              )}
-              {/* Logout button */}
-              <button onClick={logout} className="text-white">Logout</button>
-            </>
-          ) : (
-            // Link to login page if user is not authenticated
-            <Link to="/login" className="text-white">Login</Link>
-          )}
+    // Navigation section with a background and text color
+    <nav className="bg-gray-800 text-white">
+      {/* Container to center the content horizontally */}
+      <div className="container mx-auto px-6 py-4">
+        {/* Flex container to layout items horizontally */}
+        <div className="flex items-center justify-between">
+          {/* Link to the homepage */}
+          <Link to="/" className="text-xl font-bold">shopNgo</Link>
+          {/* Flex container for navigation links */}
+          <div className="flex items-center space-x-6">
+            {/* Link to the products page */}
+            <Link to="/products">Products</Link>
+            {/* Link to the cart page showing number of items in cart */}
+            <Link to="/cart" className="flex items-center">
+              Cart ({state.items.length})
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
   );
 };
 
-export default Navbar; // Export the Navbar component as default
+export default Navbar;
+
