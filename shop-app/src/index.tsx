@@ -18,9 +18,7 @@ if (rootElement) {
   root.render(
     // Use React.StrictMode to enable strict mode
     <React.StrictMode>
-      // Use QueryClientProvider to provide the QueryClient instance to the app
       <QueryClientProvider client={queryClient}>
-        // Render the App component
         <App />
       </QueryClientProvider>
     </React.StrictMode>

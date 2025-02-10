@@ -20,8 +20,8 @@ const Footer: React.FC = () => {
           {/* Second column: contact information. */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
-            <p className="text-gray-400">Email: contact@shop.com</p>
-            <p className="text-gray-400">Phone: (555) 123-4567</p>
+            <p className="text-gray-400">Email: contact@shopNgo.com</p>
+            <p className="text-gray-400">Phone: (+254) 123-4567</p>
           </div>
           {/* Third column: social media links. */}
           <div>
