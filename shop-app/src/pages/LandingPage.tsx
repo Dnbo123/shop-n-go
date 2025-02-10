@@ -21,14 +21,14 @@ export const LandingPage: React.FC = () => {
    */
   const { data: products = [], isLoading } = useQuery<Product[]>({
     queryKey: ['products'],
-    queryFn: fetchProducts
+    queryFn: fetchProducts,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // If the data is still being fetched, render a loading spinner.
   if (isLoading) return <LoadingSpinner />;
+  if (error) return <div>Error loading products</div>;
 
-  // Select the first 6 products from the array of products.
-  const featuredProducts = products.slice(0, 6);
 
   // Render the list of featured products.
   return (
@@ -36,8 +36,8 @@ export const LandingPage: React.FC = () => {
       <section className="mb-12">
         <h1 className="text-4xl font-bold mb-8">Welcome to Our Shop</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredProducts.map((product: Product) => (
-            <ProductCard key={product.id} product={product} />
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>

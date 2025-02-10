@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { ApiProduct, mapApiProductToProduct } from '../types/api.types';
 import { Product } from '../types';
 
 const api = axios.create({
@@ -10,37 +9,22 @@ const api = axios.create({
 });
 
 export const fetchProducts = async (): Promise<Product[]> => {
-  const response = await api.get<ApiProduct[]>('/products');
-  return response.data.map(mapApiProductToProduct);
-};
-
-export const fetchProduct = async (id: string): Promise<Product> => {
-  const response = await api.get<ApiProduct>(`/products/${id}`);
-  return mapApiProductToProduct(response.data);
-};
-
-export const createProduct = async (product: Omit<Product, 'id'>): Promise<Product> => {
-  const response = await api.post<ApiProduct>('/products', {
-    title: product.name,
-    price: product.price,
-    description: product.description,
-    image: product.image,
-    category: product.category
-  });
-  return mapApiProductToProduct(response.data);
-};
-
-export const updateProduct = async (id: string, product: Partial<Product>): Promise<Product> => {
-  const response = await api.put<ApiProduct>(`/products/${id}`, {
-    title: product.name,
-    price: product.price,
-    description: product.description,
-    image: product.image,
-    category: product.category
-  });
-  return mapApiProductToProduct(response.data);
-};
-
-export const deleteProduct = async (id: string): Promise<void> => {
-  await api.delete(`/products/${id}`);
+  try {
+    const response = await api.get('/products');
+    return response.data.map((item: any) => ({
+      id: item.id.toString(),
+      name: item.title,
+      price: item.price,
+      description: item.description,
+      image: item.image,
+      category: item.category,
+      stock: 100,
+      rating: item.rating.rate,
+      reviews: item.rating.count,
+      featured: false
+    }));
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    throw error;
+  }
 };
