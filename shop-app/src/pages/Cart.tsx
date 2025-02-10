@@ -3,9 +3,18 @@ import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import { CartItem } from '../types';
 
+/**
+ * The Cart component displays the items in the user's cart.
+ * If the cart is empty, it displays a message and a link to continue shopping.
+ * If the cart has items, it displays a list of the items with their name, price, and quantity.
+ * The user can update the quantity of each item and remove items from the cart.
+ * The total cost of the items in the cart is displayed at the bottom.
+ * The user can checkout by clicking the "Checkout" button.
+ */
 const Cart: React.FC = () => {
   const { state, removeFromCart, updateQuantity } = useCart();
 
+  // If the cart is empty, display a message and a link to continue shopping
   if (state.items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
@@ -21,9 +30,11 @@ const Cart: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-6">Shopping Cart</h2>
       <div className="space-y-4">
+        // Loop through each item in the cart and display its details
         {state.items.map((item: CartItem) => (
           <div key={item.id} className="flex items-center justify-between border-b pb-4">
             <div className="flex items-center">
+              // If the item has an image, display it
               {item.image && (
                 <img 
                   src={item.image} 
@@ -37,6 +48,7 @@ const Cart: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              // Display a form to update the quantity of the item
               <input
                 type="number"
                 min="1"
@@ -44,6 +56,7 @@ const Cart: React.FC = () => {
                 onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
                 className="w-16 border rounded p-1 text-center"
               />
+              // Display a button to remove the item from the cart
               <button
                 onClick={() => removeFromCart(item.id)}
                 className="text-red-500 hover:text-red-600"
@@ -55,9 +68,11 @@ const Cart: React.FC = () => {
         ))}
       </div>
       <div className="mt-8 flex justify-between items-center">
+        // Display the total cost of the items in the cart
         <div className="text-2xl font-bold">
           Total: ${state.total.toFixed(2)}
         </div>
+        // Display a button to checkout
         <button className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
           Checkout
         </button>

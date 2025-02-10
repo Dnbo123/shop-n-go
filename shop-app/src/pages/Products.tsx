@@ -6,24 +6,38 @@ import { fetchProducts } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 
+/**
+ * The Products page displays a list of products that can be filtered by category and searched by name.
+ * The products are fetched from the API using useQuery.
+ */
 const Products: React.FC = () => {
+  // State to store the current category filter and search term
   const [category, setCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Fetch products from the API using useQuery
   const { data: products = [], isLoading, error } = useQuery<Product[]>({
+    // The query key is an array that uniquely identifies the query
     queryKey: ['products'],
+    // The query function is the function that fetches the data from the API
     queryFn: fetchProducts
   });
 
+  // If the products are still loading, display a loading spinner
   if (isLoading) return <LoadingSpinner />;
+  // If there was an error loading the products, display an error message
   if (error) return <div>Error loading products</div>;
 
+  // Filter the products based on the current category filter and search term
   const filteredProducts = products.filter((product: Product) => {
+    // If the category is set to 'all', include all products
     const matchesCategory = category === 'all' || product.category === category;
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    // If the search term is not empty, only include products that match the search term
+    const matchesSearch = searchTerm === '' || product.name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
+  // Get the list of unique categories from the products
   const categories = Array.from(new Set(products.map(p => p.category)));
 
   return (

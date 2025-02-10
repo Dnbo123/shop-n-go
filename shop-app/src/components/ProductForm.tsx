@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Product } from '../types';
 import { ProductFormProps } from 'interfaces';
 
+/**
+ * A form component for adding or editing a product.
+ * @param initialData - The product data to populate the form with (if editing).
+ * @param onSubmit - The function to call when the form is submitted.
+ * @param onCancel - The function to call when the cancel button is clicked.
+ */
 const ProductForm: React.FC<ProductFormProps> = ({ initialData, onSubmit, onCancel }) => {
   // Initialize form data state with default values
   const [formData, setFormData] = useState({
@@ -205,3 +211,4 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData, onSubmit, onCanc
 };
 
 export default ProductForm;
+
