@@ -1,3 +1,4 @@
+// src/pages/LandingPage.tsx
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Product } from '../types';
@@ -5,45 +6,41 @@ import { fetchProducts } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 
-/**
- * The LandingPage component displays a list of featured products on the homepage.
- * It uses the useQuery hook from React Query to fetch the products from the API.
- * The component renders a loading spinner while the data is being fetched,
- * and then renders a list of ProductCard components with the featured products.
- */
-export const LandingPage: React.FC = () => {
-  /**
-   * Use the useQuery hook to fetch the products from the API.
-   * The query key is an array with a single string element, which is used to
-   * identify the query in the cache.
-   * The query function is the fetchProducts function, which returns a promise
-   * that resolves to an array of Product objects.
-   */
-  const { data: products = [], isLoading } = useQuery<Product[]>({
+const LandingPage: React.FC = () => {
+  const { 
+    data: products = [], 
+    isLoading, 
+    error 
+  } = useQuery<Product[]>({
     queryKey: ['products'],
     queryFn: fetchProducts,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // If the data is still being fetched, render a loading spinner.
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <div>Error loading products</div>;
+  // Show loading spinner while data is being fetched
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
+  // Show error message if there was an error fetching data
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <p className="text-red-500">Error loading products: {error instanceof Error ? error.message : 'Unknown error'}</p>
+      </div>
+    );
+  }
 
-  // Render the list of featured products.
   return (
     <div className="container mx-auto px-4 py-8">
-      <section className="mb-12">
-        <h1 className="text-4xl font-bold mb-8">Welcome to Our Shop</h1>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <h1 className="text-3xl font-bold mb-8">Featured Products</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
+        ))}
+      </div>
     </div>
   );
 };
 
 export default LandingPage;
-

@@ -2,15 +2,12 @@ import axios from 'axios';
 import { Product } from '../types';
 
 const api = axios.create({
-  baseURL: 'https://fakestoreapi.com',
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  baseURL: 'https://fakestoreapi.com'
 });
 
 export const fetchProducts = async (): Promise<Product[]> => {
   try {
-    const response = await api.get('/products');
+    const response = await api.get('/products?limit=20');
     return response.data.map((item: any) => ({
       id: item.id.toString(),
       name: item.title,
