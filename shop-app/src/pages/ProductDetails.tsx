@@ -1,88 +1,105 @@
+// src/pages/ProductDetails.tsx
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Product } from '../types';
-import { fetchProduct } from 'utils/api';
+import { fetchSingleProduct } from '../services/api';
 import { useCart } from '../context/CartContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 
-// ProductDetails component, a functional React component
 const ProductDetails: React.FC = () => {
-  // Get the product ID from the URL parameters
   const { id } = useParams<{ id: string }>();
-
-  // Get the addToCart function from the useCart hook
+  const navigate = useNavigate();
   const { addToCart } = useCart();
+  const [imageLoading, setImageLoading] = useState(true);
 
-  // State variables to track image loading and error states
-  const [imageError, setImageError] = useState(false);
-  const [isImageLoading, setIsImageLoading] = useState(true);
-
-  // Use the useQuery hook to fetch the product data
-  const { data: product, isLoading } = useQuery<Product>({
-    // Unique key for the query
+  const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', id],
-    // Function to fetch the product data
-    queryFn: () => fetchProduct(id!),
-    // Only enable the query if the product ID is present
-    enabled: !!id
+    queryFn: () => fetchSingleProduct(id!),
+    enabled: !!id,
+    retry: 1
   });
 
-  // If the product data is still loading or not available, display a loading spinner
-  if (isLoading || !product) return <LoadingSpinner />;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
-  // Render the product details
+  if (error || !product) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-600">Unable to load product details</p>
+        <button 
+          onClick={() => navigate(-1)}
+          className="mt-4 text-blue-600 hover:text-blue-800"
+        >
+          ← Back to products
+        </button>
+      </div>
+    );
+  }
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product);
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-6 text-blue-600 hover:text-blue-800"
+      >
+        ← Back
+      </button>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="relative h-96 bg-gray-100 rounded-lg">
-          {/* Display a loading animation while the image is loading */}
-          {isImageLoading && (
+        <div className="relative bg-white rounded-lg shadow-md p-4">
+          {imageLoading && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+              <LoadingSpinner />
             </div>
           )}
-          {/* Render the product image */}
           <img
-            // Use a placeholder image if the original image fails to load
-            src={imageError ? '/api/placeholder/400/400' : product.image}
+            src={product.image}
             alt={product.name}
-            className={`w-full h-full object-contain p-4 rounded-lg transition-opacity duration-300 ${
-              isImageLoading ? 'opacity-0' : 'opacity-100'
-            }`}
-            // Set the image loading state to false when the image is loaded
-            onLoad={() => setIsImageLoading(false)}
-            // Set the image error state to true and loading state to false if the image fails to load
-            onError={() => {
-              setImageError(true);
-              setIsImageLoading(false);
-            }}
+            className={`w-full h-auto object-contain ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+            onLoad={() => setImageLoading(false)}
           />
         </div>
-        <div>
-          {/* Render the product name */}
-          <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
-          {/* Render the product price */}
-          <p className="text-2xl text-blue-600 mb-4">
-            ${product.price.toFixed(2)}
-          </p>
-          {/* Render the product description */}
-          <p className="text-gray-600 mb-6">{product.description}</p>
-          {/* Render the product rating */}
-          <div className="flex items-center mb-6">
-            <div className="flex text-yellow-400">
-              {[...Array(5)].map((_, i) => (
-                <span key={i}>{i < Math.floor(product.rating) ? '★' : '☆'}</span>
-              ))}
-            </div>
-            {/* Render the number of reviews */}
-            <span className="text-sm text-gray-500 ml-2">({product.reviews} reviews)</span>
+
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
+            <p className="mt-4 text-2xl text-blue-600">${Number(product.price).toFixed(2)}</p>
           </div>
-          {/* Render the "Add to Cart" button */}
+
+          <div>
+            <h2 className="text-lg font-semibold">Description</h2>
+            <p className="mt-2 text-gray-600">{product.description}</p>
+          </div>
+
+          <div>
+            <div className="flex items-center">
+              <div className="flex text-yellow-400">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i}>
+                    {i < Math.floor(product.rating) ? '★' : '☆'}
+                  </span>
+                ))}
+              </div>
+              <span className="ml-2 text-gray-600">
+                ({product.reviews} reviews)
+              </span>
+            </div>
+          </div>
+
           <button
-            // Call the addToCart function when the button is clicked
-            onClick={() => addToCart(product)}
-            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+            onClick={handleAddToCart}
+            className="w-full md:w-auto px-8 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
             Add to Cart
           </button>
